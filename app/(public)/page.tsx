@@ -8,7 +8,7 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Alat Dapur MBG — Peralatan Dapur Berkualitas",
   description:
-    "Temukan lengkap kebutuhan dapur Anda. Peralatan dapur berkualitas dengan harga terjangkau. Pesan mudah via WhatsApp.",
+    "Kami menyediakan semua kebutuhan peralatan masak untuk program Makan Bergizi Gratis. Harga terjangkau, kualitas terjamin.",
 }
 
 function WhatsAppIcon({ size = 18 }: { size?: number }) {
@@ -39,14 +39,14 @@ export default async function HomePage() {
         <div className="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-warm-700/30" />
         <div className="absolute right-16 -bottom-20 w-48 h-48 rounded-full bg-warm-500/20" />
         <div className="container-app relative py-10 sm:py-14">
-          <p className="section-label text-warm-300 mb-3">alatdapurmbg.id</p>
+          <p className="section-label text-warm-300 mb-3">
+            Alat Dapur MBG — alatdapurmbg.id
+          </p>
           <h1 className="font-serif text-3xl sm:text-4xl text-cream leading-tight max-w-sm text-balance">
-            Peralatan Dapur{" "}
-            <em className="text-warm-300 italic">Berkualitas</em>{" "}
-            untuk Rumah Anda
+            Solusi Lengkap Peralatan Dapur <em className="text-warm-300 italic">MBG</em>
           </h1>
           <p className="mt-3 text-sm text-warm-100/60 leading-relaxed max-w-xs">
-            Temukan lengkap kebutuhan dapur Anda. Pemesanan mudah langsung via WhatsApp.
+            Kami menyediakan semua kebutuhan peralatan masak untuk program Makan Bergizi Gratis. Harga terjangkau, kualitas terjamin.
           </p>
           <div className="mt-6 flex items-center gap-3 flex-wrap">
             <a
