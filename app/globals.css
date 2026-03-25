@@ -1,26 +1,257 @@
-@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap");
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+/* ─────────────────────────────────────────────
+   BASE LAYER
+───────────────────────────────────────────── */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --cream:      #FAF7F2;
+    --warm-50:    #F5EFE4;
+    --warm-100:   #E8D9C0;
+    --warm-300:   #C4976A;
+    --warm-500:   #9E6B3F;
+    --warm-700:   #6B3F1A;
+    --warm-900:   #3A1F08;
+    --stone-200:  #E2DDD6;
+    --stone-400:  #9E9890;
+    --stone-600:  #6B6560;
+    --stone-800:  #2C2825;
+    --wa-green:   #25D366;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-cream font-sans text-stone-800 antialiased;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* Heading default ke DM Serif Display */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif text-warm-900;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  /* Link reset */
+  a {
+    @apply text-inherit no-underline;
+  }
+
+  /* Image default responsive */
+  img {
+    @apply max-w-full;
+  }
+
+  /* Scrollbar tipis & warm */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-warm-50;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-warm-300 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-warm-500;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ─────────────────────────────────────────────
+   COMPONENTS LAYER — Reusable class shortcuts
+───────────────────────────────────────────── */
+@layer components {
+
+  /* ── CONTAINER ── */
+  .container-app {
+    @apply mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2
+           rounded-lg font-sans font-medium
+           transition-all duration-150
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-warm-300
+           disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-primary {
+    @apply btn bg-warm-700 text-cream
+           hover:bg-warm-900
+           px-5 py-2.5 text-sm;
+  }
+
+  .btn-outline {
+    @apply btn border border-warm-300 text-warm-700 bg-transparent
+           hover:bg-warm-50
+           px-5 py-2.5 text-sm;
+  }
+
+  .btn-ghost {
+    @apply btn text-stone-600 bg-transparent
+           hover:bg-warm-50
+           px-4 py-2.5 text-sm underline underline-offset-4;
+  }
+
+  .btn-wa {
+    @apply btn text-white
+           px-5 py-2.5 text-sm;
+    background-color: var(--wa-green);
+  }
+  .btn-wa:hover {
+    background-color: #1aab52;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    @apply bg-white rounded-xl border border-stone-200
+           shadow-warm-sm transition-all duration-200;
+  }
+  .card-hover {
+    @apply card hover:shadow-warm-lg hover:-translate-y-0.5;
+  }
+
+  /* ── BADGES ── */
+  .badge {
+    @apply inline-flex items-center
+           rounded-full px-2.5 py-0.5
+           text-2xs font-medium tracking-wide;
+  }
+  .badge-warm {
+    @apply badge bg-warm-100 text-warm-700;
+  }
+  .badge-featured {
+    @apply badge bg-warm-700 text-cream;
+  }
+  .badge-active {
+    @apply badge bg-green-100 text-green-700;
+  }
+  .badge-inactive {
+    @apply badge bg-stone-200 text-stone-600;
+  }
+
+  /* ── FORM INPUTS ── */
+  .input {
+    @apply w-full rounded-lg border border-stone-200 bg-white
+           px-3.5 py-2.5 text-sm text-stone-800
+           placeholder:text-stone-400
+           outline-none
+           transition-all duration-150
+           focus:border-warm-300 focus:ring-2 focus:ring-warm-300/20;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-stone-700 mb-1.5;
+  }
+
+  .input-error {
+    @apply border-red-400 focus:border-red-400 focus:ring-red-200;
+  }
+
+  /* ── SECTION LABEL (uppercase kecil) ── */
+  .section-label {
+    @apply text-2xs font-medium tracking-[0.12em] uppercase text-stone-400;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    @apply h-px w-full bg-stone-200;
+  }
+
+  /* ── PRODUCT CARD IMAGE ASPECT ── */
+  .product-img-wrap {
+    @apply relative aspect-square w-full overflow-hidden bg-warm-50;
+  }
+
+  /* ── STICKY HEADER ── */
+  .header-sticky {
+    @apply sticky top-0 z-50
+           border-b border-stone-200
+           bg-cream/90 backdrop-blur-md;
+  }
+
+  /* ── WA FLOATING BUTTON ── */
+  .wa-fab {
+    @apply fixed bottom-6 right-5 z-50
+           flex h-14 w-14 items-center justify-center
+           rounded-2xl shadow-warm-lg
+           transition-transform duration-200
+           hover:scale-110 hover:-translate-y-0.5;
+    background-color: var(--wa-green);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+  }
+
+  /* ── ADMIN SIDEBAR ITEM ── */
+  .sidebar-item {
+    @apply flex items-center gap-3 rounded-lg px-3 py-2.5
+           text-sm font-medium text-stone-600
+           transition-colors duration-150
+           hover:bg-warm-50 hover:text-warm-700;
+  }
+  .sidebar-item-active {
+    @apply sidebar-item bg-warm-50 text-warm-700
+           border-l-[3px] border-warm-500 rounded-l-none;
+  }
+
+  /* ── ADMIN TABLE ── */
+  .table-th {
+    @apply px-4 py-3 text-left text-2xs font-medium
+           uppercase tracking-[0.08em] text-stone-400;
+  }
+  .table-td {
+    @apply px-4 py-3 text-sm text-stone-800;
+  }
+  .table-tr {
+    @apply border-b border-stone-100 transition-colors
+           hover:bg-warm-50/50;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   UTILITIES LAYER
+───────────────────────────────────────────── */
+@layer utilities {
+  /* Hide scrollbar tapi tetap bisa scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Text balance untuk heading */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Animasi fade-in sederhana */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Pulse untuk WA FAB */
+  .animate-wa-pulse {
+    animation: waPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes waPulse {
+    0%, 100% { box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4); }
+    50%       { box-shadow: 0 6px 28px rgba(37, 211, 102, 0.65); }
+  }
 }
