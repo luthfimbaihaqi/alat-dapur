@@ -4,7 +4,7 @@ import type { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Tentang Kami",
-  description: "Mengenal lebih dekat Alat Dapur MBG — toko peralatan dapur berkualitas.",
+  description: "Alat Dapur MBG — supplier peralatan masak terpercaya untuk program Makan Bergizi Gratis.",
 }
 
 function WhatsAppIcon({ size = 18 }: { size?: number }) {
@@ -39,34 +39,50 @@ export default function TentangKamiPage() {
           Alat Dapur <em className="text-warm-300 italic">MBG</em>
         </h1>
         <p className="mt-3 text-sm text-warm-100/60 leading-relaxed relative">
-          Toko peralatan dapur berkualitas untuk kebutuhan rumah tangga sehari-hari.
+          Supplier peralatan masak terpercaya untuk program Makan Bergizi Gratis.
         </p>
       </div>
 
       {/* CONTENT */}
       <div className="flex flex-col gap-6">
 
+        {/* Siapa Kami */}
         <div className="card p-5">
           <h2 className="font-serif text-lg text-warm-900 mb-3">Siapa Kami?</h2>
           <p className="text-sm text-stone-600 leading-relaxed">
-            Alat Dapur MBG adalah toko peralatan dapur yang menyediakan berbagai
-            produk berkualitas tinggi untuk kebutuhan dapur rumah tangga. Kami
-            berkomitmen untuk memberikan produk terbaik dengan harga yang terjangkau.
+            Alat Dapur MBG adalah supplier peralatan masak yang fokus melayani
+            kebutuhan dapur untuk program <strong className="font-medium text-stone-700">Makan Bergizi Gratis (MBG)</strong> dari
+            pemerintah. Kami menyediakan berbagai peralatan masak berkualitas — mulai
+            dari wajan, panci, hingga peralatan makan — untuk mendukung kelancaran
+            operasional dapur MBG di seluruh wilayah.
           </p>
           <p className="text-sm text-stone-600 leading-relaxed mt-3">
-            Setiap produk yang kami jual dipilih dengan cermat untuk memastikan
-            kualitas dan keawetannya. Kepuasan pelanggan adalah prioritas utama kami.
+            Setiap produk yang kami sediakan dipilih dengan cermat untuk memastikan
+            ketahanan dan keamanannya dalam penggunaan skala besar sehari-hari.
           </p>
         </div>
 
+        {/* Mengapa Pilih Kami */}
         <div className="card p-5">
           <h2 className="font-serif text-lg text-warm-900 mb-4">Mengapa Pilih Kami?</h2>
           <div className="flex flex-col gap-3">
             {[
-              { title: "Produk Berkualitas", desc: "Semua produk dipilih dari produsen terpercaya" },
-              { title: "Harga Terjangkau",   desc: "Harga kompetitif tanpa mengorbankan kualitas" },
-              { title: "Pemesanan Mudah",    desc: "Cukup chat via WhatsApp, kami siap melayani" },
-              { title: "Pelayanan Ramah",    desc: "Kami dengan senang hati membantu pertanyaan Anda" },
+              {
+                title: "Khusus Kebutuhan MBG",
+                desc:  "Produk kami dipilih sesuai standar kebutuhan dapur program Makan Bergizi Gratis",
+              },
+              {
+                title: "Harga Kompetitif",
+                desc:  "Harga terjangkau untuk pembelian satuan maupun dalam jumlah besar",
+              },
+              {
+                title: "Pemesanan Mudah & Cepat",
+                desc:  "Cukup chat via WhatsApp, pesanan kami proses dengan sigap",
+              },
+              {
+                title: "Produk Berkualitas & Tahan Lama",
+                desc:  "Semua produk food-grade, aman, dan dirancang untuk penggunaan intensif",
+              },
             ].map((item) => (
               <div key={item.title} className="flex items-start gap-3">
                 <div className="w-6 h-6 rounded-full bg-warm-100 flex items-center justify-center shrink-0 mt-0.5">
@@ -81,6 +97,7 @@ export default function TentangKamiPage() {
           </div>
         </div>
 
+        {/* Hubungi Kami */}
         <div className="card p-5">
           <h2 className="font-serif text-lg text-warm-900 mb-4">Hubungi Kami</h2>
           <div className="flex flex-col gap-3">
@@ -94,8 +111,12 @@ export default function TentangKamiPage() {
               </div>
               <div>
                 <p className="text-xs text-stone-400">WhatsApp</p>
-                <a href={waUrl} target="_blank" rel="noopener noreferrer"
-                  className="text-sm font-medium text-warm-700 hover:text-warm-900 transition-colors">
+                <a
+                  href={waUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium text-warm-700 hover:text-warm-900 transition-colors"
+                >
                   {process.env.NEXT_PUBLIC_WA_NUMBER ?? "-"}
                 </a>
               </div>
@@ -129,6 +150,7 @@ export default function TentangKamiPage() {
             Chat via WhatsApp Sekarang
           </a>
         </div>
+
       </div>
     </div>
   )
