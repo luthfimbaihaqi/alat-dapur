@@ -2,16 +2,11 @@
 
 import { useState, useEffect, useRef, useCallback } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { Search, X, Menu } from "lucide-react"
 import { cn, buildWhatsAppUrl } from "@/lib/utils"
 import { searchProducts } from "@/actions/products"
-import { getActiveCategories } from "@/actions/categories"
 import type { ProductWithCategory, Category } from "@/types"
 
-// ─────────────────────────────────────────────
-//  WA ICON SVG
-// ─────────────────────────────────────────────
 function WhatsAppIcon({ size = 20 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
@@ -21,41 +16,34 @@ function WhatsAppIcon({ size = 20 }: { size?: number }) {
   )
 }
 
-// ─────────────────────────────────────────────
-//  HEADER COMPONENT
-// ─────────────────────────────────────────────
 interface HeaderProps {
   categories?: Category[]
 }
 
 export default function Header({ categories = [] }: HeaderProps) {
-  const router = useRouter()
   const searchRef = useRef<HTMLDivElement>(null)
 
-  const [scrolled, setScrolled]         = useState(false)
-  const [drawerOpen, setDrawerOpen]     = useState(false)
-  const [searchQuery, setSearchQuery]   = useState("")
+  const [scrolled, setScrolled]           = useState(false)
+  const [drawerOpen, setDrawerOpen]       = useState(false)
+  const [searchQuery, setSearchQuery]     = useState("")
   const [searchResults, setSearchResults] = useState<ProductWithCategory[]>([])
-  const [showDropdown, setShowDropdown] = useState(false)
-  const [isSearching, setIsSearching]   = useState(false)
+  const [showDropdown, setShowDropdown]   = useState(false)
+  const [isSearching, setIsSearching]     = useState(false)
 
   const waNumber = process.env.NEXT_PUBLIC_WA_NUMBER ?? ""
   const waUrl    = buildWhatsAppUrl(waNumber)
 
-  // ── Sticky shadow on scroll ──
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  // ── Lock body scroll saat drawer buka ──
   useEffect(() => {
     document.body.style.overflow = drawerOpen ? "hidden" : ""
     return () => { document.body.style.overflow = "" }
   }, [drawerOpen])
 
-  // ── Tutup dropdown saat klik di luar ──
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
@@ -66,9 +54,7 @@ export default function Header({ categories = [] }: HeaderProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
-  // ── Live search dengan debounce ──
   const handleSearch = useCallback(async (query: string) => {
-    setSearchQuery(query)
     if (!query.trim()) {
       setSearchResults([])
       setShowDropdown(false)
@@ -86,7 +72,6 @@ export default function Header({ categories = [] }: HeaderProps) {
     }
   }, [])
 
-  // ── Debounce search ──
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchQuery.trim()) handleSearch(searchQuery)
@@ -102,24 +87,14 @@ export default function Header({ categories = [] }: HeaderProps) {
 
   return (
     <>
-      {/* ── HEADER WRAPPER ── */}
-      <header
-        className={cn(
-          "header-sticky transition-shadow duration-300",
-          scrolled && "shadow-warm-md"
-        )}
-      >
-        {/* ── TOP BAR ── */}
+      {/* ── HEADER ── */}
+      <header className={cn("header-sticky transition-shadow duration-300", scrolled && "shadow-warm-md")}>
         <div className="flex items-center gap-3 px-4 h-14">
 
           {/* Hamburger */}
           <button
             onClick={() => setDrawerOpen(true)}
-            className={cn(
-              "flex flex-col items-center justify-center gap-[5px]",
-              "w-9 h-9 rounded-lg shrink-0",
-              "hover:bg-warm-50 transition-colors duration-150"
-            )}
+            className="flex items-center justify-center w-9 h-9 rounded-lg hover:bg-warm-50 transition-colors duration-150 shrink-0"
             aria-label="Buka menu"
           >
             <Menu size={20} className="text-warm-900" />
@@ -132,13 +107,10 @@ export default function Header({ categories = [] }: HeaderProps) {
             </span>
           </Link>
 
-          {/* Search bar */}
+          {/* Search */}
           <div ref={searchRef} className="relative flex-1">
             <div className="relative flex items-center">
-              <Search
-                size={15}
-                className="absolute left-3 text-stone-400 pointer-events-none"
-              />
+              <Search size={15} className="absolute left-3 text-stone-400 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
@@ -156,12 +128,7 @@ export default function Header({ categories = [] }: HeaderProps) {
               {searchQuery && (
                 <button
                   onClick={clearSearch}
-                  className={cn(
-                    "absolute right-2.5 w-4 h-4 rounded-full",
-                    "bg-stone-200 hover:bg-stone-300",
-                    "flex items-center justify-center",
-                    "transition-colors duration-150"
-                  )}
+                  className="absolute right-2.5 w-4 h-4 rounded-full bg-stone-200 hover:bg-stone-300 flex items-center justify-center transition-colors duration-150"
                 >
                   <X size={10} className="text-stone-600" />
                 </button>
@@ -170,112 +137,65 @@ export default function Header({ categories = [] }: HeaderProps) {
 
             {/* Search dropdown */}
             {showDropdown && (
-              <div className={cn(
-                "absolute top-full left-0 right-0 mt-1.5 z-50",
-                "bg-white rounded-xl border border-stone-200",
-                "shadow-warm-lg overflow-hidden"
-              )}>
+              <div className="absolute top-full left-0 right-0 mt-1.5 z-50 bg-white rounded-xl border border-stone-200 shadow-warm-lg overflow-hidden">
                 {isSearching ? (
-                  <div className="px-4 py-4 text-sm text-stone-400 text-center">
-                    Mencari...
-                  </div>
+                  <div className="px-4 py-4 text-sm text-stone-400 text-center">Mencari...</div>
                 ) : searchResults.length > 0 ? (
                   searchResults.map((product) => (
                     <Link
                       key={product.id}
                       href={`/products/${product.slug}`}
                       onClick={clearSearch}
-                      className={cn(
-                        "flex items-center gap-3 px-3 py-2.5",
-                        "hover:bg-warm-50 transition-colors duration-100"
-                      )}
+                      className="flex items-center gap-3 px-3 py-2.5 hover:bg-warm-50 transition-colors duration-100"
                     >
-                      {/* Thumbnail */}
-                      <div className={cn(
-                        "w-10 h-10 rounded-lg shrink-0",
-                        "bg-warm-50 overflow-hidden"
-                      )}>
+                      <div className="w-10 h-10 rounded-lg shrink-0 bg-warm-50 overflow-hidden">
                         {product.images?.[0] ? (
-                          <img
-                            src={product.images[0]}
-                            alt={product.name}
-                            className="w-full h-full object-cover"
-                          />
+                          <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-stone-300">
                             <Search size={14} />
                           </div>
                         )}
                       </div>
-                      {/* Info */}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-stone-800 truncate">
-                          {product.name}
-                        </p>
-                        <p className="text-xs text-stone-400">
-                          {product.category?.name}
-                        </p>
+                        <p className="text-sm font-medium text-stone-800 truncate">{product.name}</p>
+                        <p className="text-xs text-stone-400">{product.category?.name}</p>
                       </div>
-                      {/* Price */}
                       <p className="text-sm font-medium text-warm-600 shrink-0">
-                        {new Intl.NumberFormat("id-ID", {
-                          style: "currency",
-                          currency: "IDR",
-                          minimumFractionDigits: 0,
-                        }).format(product.price)}
+                        {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(product.price)}
                       </p>
                     </Link>
                   ))
                 ) : (
-                  <div className="px-4 py-4 text-sm text-stone-400 text-center">
-                    Produk tidak ditemukan
-                  </div>
+                  <div className="px-4 py-4 text-sm text-stone-400 text-center">Produk tidak ditemukan</div>
                 )}
               </div>
             )}
           </div>
 
-          {/* WA icon button */}
+          {/* WA Button */}
           <a
             href={waUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className={cn(
-              "shrink-0 w-9 h-9 rounded-lg",
-              "bg-[#25D366] hover:bg-[#1aab52]",
-              "flex items-center justify-center text-white",
-              "transition-all duration-150 hover:scale-105"
-            )}
+            className="shrink-0 w-9 h-9 rounded-lg bg-[#25D366] hover:bg-[#1aab52] flex items-center justify-center text-white transition-all duration-150 hover:scale-105"
             aria-label="Hubungi via WhatsApp"
           >
             <WhatsAppIcon size={18} />
           </a>
         </div>
 
-        {/* ── CATEGORY STRIP ── */}
+        {/* Category Strip */}
         {categories.length > 0 && (
           <div className="flex items-center gap-2 px-4 pb-2.5 overflow-x-auto scrollbar-hide">
-            <Link
-              href="/"
-              className={cn(
-                "shrink-0 px-4 py-1.5 rounded-full text-xs font-medium",
-                "border border-stone-200 bg-white text-stone-600",
-                "hover:border-warm-300 hover:text-warm-700",
-                "transition-all duration-150"
-              )}
-            >
+            <Link href="/" className="shrink-0 px-4 py-1.5 rounded-full text-xs font-medium border border-stone-200 bg-white text-stone-600 hover:border-warm-300 hover:text-warm-700 transition-all duration-150">
               Semua
             </Link>
             {categories.map((cat) => (
               <Link
                 key={cat.id}
                 href={`/categories/${cat.slug}`}
-                className={cn(
-                  "shrink-0 whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-medium",
-                  "border border-stone-200 bg-white text-stone-600",
-                  "hover:border-warm-300 hover:text-warm-700",
-                  "transition-all duration-150"
-                )}
+                className="shrink-0 whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-medium border border-stone-200 bg-white text-stone-600 hover:border-warm-300 hover:text-warm-700 transition-all duration-150"
               >
                 {cat.name}
               </Link>
@@ -288,9 +208,7 @@ export default function Header({ categories = [] }: HeaderProps) {
       <div
         className={cn(
           "fixed inset-0 z-[200] transition-opacity duration-300",
-          drawerOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
+          drawerOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
         onClick={() => setDrawerOpen(false)}
       >
@@ -301,8 +219,7 @@ export default function Header({ categories = [] }: HeaderProps) {
       <aside
         className={cn(
           "fixed top-0 left-0 bottom-0 z-[300]",
-          "w-[min(300px,82vw)] bg-white",
-          "flex flex-col overflow-hidden",
+          "w-[min(300px,82vw)] bg-white flex flex-col overflow-hidden",
           "transition-transform duration-300 ease-[cubic-bezier(.4,0,.2,1)]",
           drawerOpen ? "translate-x-0" : "-translate-x-full"
         )}
@@ -314,11 +231,7 @@ export default function Header({ categories = [] }: HeaderProps) {
           </span>
           <button
             onClick={() => setDrawerOpen(false)}
-            className={cn(
-              "w-8 h-8 rounded-lg flex items-center justify-center",
-              "bg-white/10 hover:bg-white/20 text-cream",
-              "transition-colors duration-150"
-            )}
+            className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/10 hover:bg-white/20 text-cream transition-colors duration-150"
           >
             <X size={16} />
           </button>
@@ -328,61 +241,49 @@ export default function Header({ categories = [] }: HeaderProps) {
         <nav className="flex-1 overflow-y-auto py-2">
           <p className="section-label px-5 pt-4 pb-2">Kategori Produk</p>
 
+          {/* Semua Produk — tanpa icon */}
           <Link
             href="/"
             onClick={() => setDrawerOpen(false)}
-            className="flex items-center gap-3 px-5 py-3 hover:bg-warm-50 transition-colors"
+            className="flex items-center px-5 py-3 hover:bg-warm-50 transition-colors"
           >
-            <div className="w-8 h-8 rounded-lg bg-warm-50 flex items-center justify-center text-sm">
-              🏠
-            </div>
             <span className="text-sm font-medium text-stone-800">Semua Produk</span>
           </Link>
 
+          {/* Kategori — tanpa icon */}
           {categories.map((cat) => (
             <Link
               key={cat.id}
               href={`/categories/${cat.slug}`}
               onClick={() => setDrawerOpen(false)}
-              className="flex items-center gap-3 px-5 py-3 hover:bg-warm-50 transition-colors"
+              className="flex items-center px-5 py-3 hover:bg-warm-50 transition-colors"
             >
-              <div className="w-8 h-8 rounded-lg bg-warm-50 flex items-center justify-center overflow-hidden">
-                {cat.image_url ? (
-                  <img src={cat.image_url} alt={cat.name} className="w-full h-full object-cover" />
-                ) : (
-                  <span className="text-sm">🍳</span>
-                )}
-              </div>
               <span className="text-sm font-medium text-stone-800">{cat.name}</span>
             </Link>
           ))}
 
           <div className="divider mx-5 my-2" />
 
+          {/* Tentang Kami — tetap dengan icon */}
           <Link
             href="/tentang-kami"
             onClick={() => setDrawerOpen(false)}
             className="flex items-center gap-3 px-5 py-3 hover:bg-warm-50 transition-colors"
           >
-            <div className="w-8 h-8 rounded-lg bg-warm-50 flex items-center justify-center text-sm">
+            <div className="w-8 h-8 rounded-lg bg-warm-50 flex items-center justify-center text-sm shrink-0">
               ℹ️
             </div>
             <span className="text-sm font-medium text-stone-800">Tentang Kami</span>
           </Link>
         </nav>
 
-        {/* Drawer footer — WA button */}
+        {/* Drawer footer — WA button tetap */}
         <div className="p-4 border-t border-stone-200">
           <a
             href={waUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className={cn(
-              "flex items-center justify-center gap-2 w-full",
-              "bg-[#25D366] hover:bg-[#1aab52] text-white",
-              "rounded-xl py-3 text-sm font-medium",
-              "transition-colors duration-150"
-            )}
+            className="flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-[#1aab52] text-white rounded-xl py-3 text-sm font-medium transition-colors duration-150"
           >
             <WhatsAppIcon size={16} />
             Hubungi via WhatsApp
@@ -390,15 +291,12 @@ export default function Header({ categories = [] }: HeaderProps) {
         </div>
       </aside>
 
-      {/* ── FLOATING WA BUTTON ── */}
+      {/* ── FLOATING WA ── */}
       <a
         href={waUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className={cn(
-          "wa-fab animate-wa-pulse",
-          "text-white"
-        )}
+        className={cn("wa-fab animate-wa-pulse", "text-white")}
         aria-label="Hubungi via WhatsApp"
       >
         <WhatsAppIcon size={26} />
